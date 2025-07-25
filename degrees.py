@@ -92,6 +92,28 @@ def shortest_path(source, target):
     If no possible path, returns None.
     """
 
+    # High concept idea od steps I need to figure out:
+    # 1. fetch neighbors for source 
+    # 2. Add the source neighbors to a frontier
+    # 3. Take one of the paris from the frontier as a node
+    # 4. Check if the node has the target person_id
+    #   5. If it does, return the path
+    # 6. If it doesn't, add the new neighbors of the node to the frontier
+    # 7. Add explored node to explored set
+    # 8. Repeat until the frontier is empty or the target is found
+    
+    # Return movie_ids and person_id pairs
+    source_list = neighbors_for_person(source)
+    target_list = neighbors_for_person(target)
+    
+    if source_list == set():
+        print("No movies with one of these actors")
+
+    for movie_id, person_id in source_list:
+        print(f"Source person Movie: {movie_id}, Person: {person_id}")
+    
+    for movie_id, person_id in target_list:
+        print(f"Target person Movie: {movie_id}, Person: {person_id}")
     # TODO
     raise NotImplementedError
 
