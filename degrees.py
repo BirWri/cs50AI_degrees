@@ -110,10 +110,10 @@ def shortest_path(source, target):
         print("No movies with one of these actors")
 
     for movie_id, person_id in source_list:
-        print(f"Source person Movie: {movie_id}, Person: {person_id}")
+        print(f"Source person Movie: {movies[movie_id]['title']}, Person: {people[person_id]['name']}")
     
     for movie_id, person_id in target_list:
-        print(f"Target person Movie: {movie_id}, Person: {person_id}")
+        print(f"Target person Movie: {movies[movie_id]['title']}, Person: {people[person_id]['name']}")
     # TODO
     raise NotImplementedError
 
