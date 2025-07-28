@@ -104,21 +104,19 @@ def shortest_path(source, target):
     
     # Return movie_ids and person_id pairs
     source_list = neighbors_for_person(source)
-    target_list = neighbors_for_person(target)
 
     print ("userinput:" + source)
 
     start = source
     goal = target
+
+    print(goal)
     
     if source_list == set():
         print("No movies with one of these actors")
 
     for movie_id, person_id in source_list:
         print(f"Source person Movie: {movies[movie_id]['title']}, Person: {people[person_id]['name']}")
-    
-    for movie_id, person_id in target_list:
-        print(f"Target person Movie: {movies[movie_id]['title']}, Person: {people[person_id]['name']}")
 
     # Keep track of number of states explored
     num_explored = 0
@@ -134,47 +132,58 @@ def shortest_path(source, target):
 
     print(len(frontier.frontier))
 
-    ## WORKS UNTIL HERE!!!!
-
     # Initialize an empty explored set
     explored = set()
 
-    #If nothing left in frontier, then no path
-    if frontier.empty():
-        raise Exception("no solution")
+    while num_explored < 40:
 
-    # Choose a node from the frontier, removeing the node from the frontier means, that
-     # it is the one that will be or has just been explored
-    node = frontier.remove()
-    num_explored += 1
+        #If nothing left in frontier, then no path
+        if frontier.empty():
+            raise Exception("no solution")
 
-    # If node is the goal, then we have a solution
+        # Choose a node from the frontier, removeing the node from the frontier means, that
+        # it is the one that will be or has just been explored
+        node = frontier.remove()
+        print(f"Number of person: {node.state}")
+        num_explored += 1
 
-    if node.state == goal:
-            actions = []
-            cells = []
-            while node.parent is not None:
-                actions.append(node.action)
-                cells.append(node.state)
-                node = node.parent
-            actions.reverse()
-            cells.reverse()
-            solution = (actions, cells)
-            return
+        # If node is the goal, then we have a solution
 
-    # Mark node as explored
-    explored.add(node.state)
+        if node.state == goal:
+                actions = []
+                #cells = []
+                while node.parent is not None:
+                    actions.append((node.action, node.state))
+                    #cells.append(node.state)
+                    node = node.parent
+                actions.reverse()
+                #cells.reverse()
+                solution = actions
+                print(f"solution {solution}")
+                return solution
 
-    # Add neighbors to frontier
-    for movie_id, person_id in source_list:
-          
-            child = Node(state=person_id, parent=node, action=movie_id)
-            frontier.add(child)
+        #Find neigbors to the node abut to be retired
+        source_list = neighbors_for_person(node.state)
 
-    # Print explored list
-    print("Explored:" , explored)
+        # Mark node as explored
+        explored.add(node.state)
 
-    print(len(frontier.frontier))
+        # Add neighbors to frontier
+        for movie_id, person_id in source_list:
+            
+                child = Node(state=person_id, parent=node, action=movie_id)
+                #print("here")
+                #print(child.state)
+                #print(child.parent)
+                #print("there")
+                frontier.add(child)
+
+        # Print explored list
+        print("Explored:" , explored)
+
+        print(len(frontier.frontier))
+
+        print("NEW ITERATION")
 
     
 
