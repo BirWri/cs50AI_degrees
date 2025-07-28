@@ -135,7 +135,7 @@ def shortest_path(source, target):
     # Initialize an empty explored set
     explored = set()
 
-    while num_explored < 40:
+    while True:
 
         #If nothing left in frontier, then no path
         if frontier.empty():
