@@ -91,20 +91,9 @@ def shortest_path(source, target):
 
     If no possible path, returns None.
     """
-
-    # High concept idea od steps I need to figure out:
-    # 1. fetch neighbors for source 
-    # 2. Add the source neighbors to a frontier
-    # 3. Take one of the paris from the frontier as a node
-    # 4. Check if the node has the target person_id
-    #   5. If it does, return the path
-    # 6. If it doesn't, add the new neighbors of the node to the frontier
-    # 7. Add explored node to explored set
-    # 8. Repeat until the frontier is empty or the target is found
     
-    # Return movie_ids and person_id pairs
+    # First set of node for frontier, return person_id pairs
     source_list = neighbors_for_person(source)
-
     print ("userinput:" + source)
 
     start = source
@@ -114,22 +103,25 @@ def shortest_path(source, target):
     
     if source_list == set():
         print("No movies with one of these actors")
+        return None
 
-    for movie_id, person_id in source_list:
-        print(f"Source person Movie: {movies[movie_id]['title']}, Person: {people[person_id]['name']}")
+    #for movie_id, person_id in source_list:
+        #print(f"Source person Movie: {movies[movie_id]['title']}, Person: {people[person_id]['name']}")
 
     # Keep track of number of states explored
     num_explored = 0
 
-    # Initialize frontier to just the starting position
+    # Initialize frontier to just the starting position, where the starting actor is recorded with no value for parent and action. 
+    # It helps to identify it as the starting node
     start = Node(state=start, parent=None, action=None)
 
-    # Alternative to use a queue for breadth-first search
+    # Queue for breadth-first search
     frontier = QueueFrontier()
 
+    # Add the strating node to the frontier
     frontier.add(start)
 
-
+    # Check how many items are in the froniter list
     print(len(frontier.frontier))
 
     # Initialize an empty explored set
@@ -139,30 +131,24 @@ def shortest_path(source, target):
 
         #If nothing left in frontier, then no path
         if frontier.empty():
-            raise Exception("no solution")
+            return None
 
-        # Choose a node from the frontier, removeing the node from the frontier means, that
+        # Choose a node from the frontier, removing the node from the frontier means, that
         # it is the one that will be or has just been explored
         node = frontier.remove()
         print(f"Number of person: {node.state}")
         num_explored += 1
 
         # If node is the goal, then we have a solution
-
         if node.state == goal:
-                actions = []
-                #cells = []
+                solution = []
                 while node.parent is not None:
-                    actions.append((node.action, node.state))
-                    #cells.append(node.state)
+                    solution.append((node.action, node.state))
                     node = node.parent
-                actions.reverse()
-                #cells.reverse()
-                solution = actions
-                print(f"solution {solution}")
+                solution.reverse()
                 return solution
 
-        #Find neigbors to the node abut to be retired
+        #Find neigbors to the node about to be retired
         source_list = neighbors_for_person(node.state)
 
         # Mark node as explored
@@ -172,10 +158,6 @@ def shortest_path(source, target):
         for movie_id, person_id in source_list:
             
                 child = Node(state=person_id, parent=node, action=movie_id)
-                #print("here")
-                #print(child.state)
-                #print(child.parent)
-                #print("there")
                 frontier.add(child)
 
         # Print explored list
@@ -185,11 +167,9 @@ def shortest_path(source, target):
 
         print("NEW ITERATION")
 
-    
-
 
     # TODO
-    raise NotImplementedError
+    #raise NotImplementedError
 
 
 def person_id_for_name(name):
