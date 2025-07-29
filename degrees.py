@@ -105,8 +105,8 @@ def shortest_path(source, target):
         print("No movies with one of these actors")
         return None
 
-    #for movie_id, person_id in source_list:
-        #print(f"Source person Movie: {movies[movie_id]['title']}, Person: {people[person_id]['name']}")
+    for movie_id, person_id in source_list:
+        print(f"Source person Movie: {movies[movie_id]['title']}, Person: {people[person_id]['name']}")
 
     # Keep track of number of states explored
     num_explored = 0
@@ -136,36 +136,42 @@ def shortest_path(source, target):
         # Choose a node from the frontier, removing the node from the frontier means, that
         # it is the one that will be or has just been explored
         node = frontier.remove()
-        print(f"Number of person: {node.state}")
-        num_explored += 1
 
-        # If node is the goal, then we have a solution
-        if node.state == goal:
-                solution = []
-                while node.parent is not None:
-                    solution.append((node.action, node.state))
-                    node = node.parent
-                solution.reverse()
-                return solution
+        if node.state  not in explored:
+            print(f"Number of person: {node.state}")
+            num_explored += 1
 
-        #Find neigbors to the node about to be retired
-        source_list = neighbors_for_person(node.state)
 
-        # Mark node as explored
-        explored.add(node.state)
 
-        # Add neighbors to frontier
-        for movie_id, person_id in source_list:
-            
-                child = Node(state=person_id, parent=node, action=movie_id)
-                frontier.add(child)
+            # If node is the goal, then we have a solution
+            if node.state == goal:
+                    solution = []
+                    while node.parent is not None:
+                        solution.append((node.action, node.state))
+                        node = node.parent
+                    solution.reverse()
+                    return solution
 
-        # Print explored list
-        print("Explored:" , explored)
+            #Find neigbors to the node about to be retired
+            source_list = neighbors_for_person(node.state)
 
-        print(len(frontier.frontier))
+            # Mark node as explored
+            explored.add(node.state)
 
-        print("NEW ITERATION")
+            # Add neighbors to frontier
+            for movie_id, person_id in source_list:
+                
+                    child = Node(state=person_id, parent=node, action=movie_id)
+                    frontier.add(child)
+
+            # Print explored list
+            print("Explored:" , explored)
+
+            print(f"Bigger: {len(frontier.frontier)}")
+
+            print("NEW ITERATION")
+
+        print(f"Smaller: {len(frontier.frontier)}")
 
 
     # TODO
